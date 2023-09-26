@@ -4,7 +4,7 @@ import { MEALS } from "../data/dummy-data";
 
 function MealItem({ mealId, title, imageUrl, duration, complexity, affordability }) {
     const navigation = useNavigation();
-    const mealDeatiles = MEALS.filter((item)=>item.id==mealId)
+    const mealDeatiles = MEALS.find((item)=>item.id==mealId)
 
     function handlerPress() {
        navigation.navigate("MealsDeatiles",{

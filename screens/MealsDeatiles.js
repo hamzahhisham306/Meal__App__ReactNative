@@ -1,40 +1,61 @@
-import { View, Text, StyleSheet,Pressable, Image } from "react-native";
+import { View, Text, StyleSheet, Pressable, Image, ScrollView, Button } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useLayoutEffect } from "react";
-function MealsDeatiles(){
+import MealDetails from "../components/MealDetails";
+import IconButton from "../components/IconButton";
+function MealsDeatiles() {
     const route = useRoute();
     const mealData = route.params.mealDeatiles;
     const navigate = useNavigation();
-    useLayoutEffect(()=>{
+    const handlerPress = () => {
+
+    }
+    useLayoutEffect(() => {
         navigate.setOptions({
-            title:mealData[0].title
+            title: mealData.title,
         })
-    },[])
-  return   <View style={styles.mealItem}>
-            <Pressable android_ripple={{ color: '#ccc' }} style={({ pressed }) => pressed ? styles.pressItem : null} >
+        navigate.setOptions({
+            headerRight: () => {
+                return <IconButton onPress={handlerPress} name='star' color='white'/>
+            }
+        })
+    }, [handlerPress, navigate])
+    return <ScrollView style={styles.mealItem}>
+        <Pressable >
+            <View>
                 <View>
-                    <View>
-                        <Image source={{ uri: mealData[0].imageUrl }} style={styles.image} />
-                        <Text style={styles.title}>{mealData[0].title}</Text>
-                    </View>
-                    <View style={styles.deatiles}>
-                        <Text style={styles.deatilesItem}>{mealData[0].duration}</Text>
-                        <Text style={styles.deatilesItem}>{mealData[0].complexity.toUpperCase()}</Text>
-                        <Text style={styles.deatilesItem}>{mealData[0].affordability.toUpperCase()}</Text>
-                    </View>
+                    <Image source={{ uri: mealData.imageUrl }} style={styles.image} />
+                    <Text style={styles.title}>{mealData.title}</Text>
                 </View>
-            </Pressable>
+                <MealDetails mealData={mealData} />
+            </View>
+        </Pressable>
+        <View style={styles.subtitleContainer}>
+            <Text style={styles.subtitle}>Ingredients</Text>
         </View>
+        <View style={styles.ingredientsContainer}>
+            {mealData.ingredients.map((item) => (
+                <Text key={item} style={styles.ingredients}>{item}</Text>
+            ))}
+        </View>
+        <View style={styles.subtitleContainer}>
+            <Text style={styles.subtitle}>Steps</Text>
+        </View>
+        <View style={styles.stepsContainer}>
+            {mealData.steps.map((item) => (
+                <Text key={item} style={styles.step}>{item}</Text>
+            ))}
+        </View>
+    </ScrollView>
 }
 
 export default MealsDeatiles;
 
 const styles = StyleSheet.create({
     mealItem: {
-        margin: 16,
         borderRadius: 8,
         overflow: 'hidden',
-        backgroundColor: 'white',
+        backgroundColor: '#3f2f25',
         elevation: 4,
         shadowColor: 'black',
         shadowOpacity: 0.25,
@@ -47,25 +68,47 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '100%',
-        height: 200,
+        height: 350,
     },
-    pressItem: {
-        opacity: 0.5
-    },
+
     title: {
         fontWeight: "bold",
         textAlign: 'center',
+        fontSize: 24,
+        margin: 8,
+        color: 'white'
+    },
+    subtitle: {
+        color: 'white',
         fontSize: 18,
-        margin: 8
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: "#e2b497"
+
     },
-    deatiles: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 8,
-        justifyContent: 'center'
+    subtitleContainer: {
+        padding: 6,
+        borderBottomColor: 'white',
+        borderBottomWidth: 2,
+        margin: 6,
     },
-    deatilesItem: {
-        marginHorizontal: 4,
-        fontSize: 12,
+    ingredients: {
+        textAlign: 'center',
+        color: '#351401',
+        borderRadius: 8,
+        marginHorizontal: 12,
+        marginVertical: 4,
+
+    },
+    ingredientsContainer: {
+        backgroundColor: '#e2b497',
+    },
+    step: {
+        textAlign: 'center',
+        margin: 5,
+        color: '#351401'
+    },
+    stepsContainer: {
+        backgroundColor: '#e2b497',
     }
 })
